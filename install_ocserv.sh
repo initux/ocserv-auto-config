@@ -19,13 +19,8 @@ else
     fi
 		apt update
 		apt dist-upgrade -y
- 		apt install build-essential ocserv python3-certbot-dns-cloudflare unzip -y
-# 		apt install build-essential ocserv python3-certbot-dns-cloudflare unzip -y
-#     wget -O ocserv.zip "https://github.com/dreamsafari/ocserv-auto-config/blob/master/ocserv.zip?raw=true"
-#     rm -rf /etc/ocserv
-#     unzip ocserv.zip -d /etc/ocserv
-#     rm ocserv.zip
-    # cloudflare sub-domain registration
+ 		apt install build-essential ocserv python3-certbot-dns-cloudflare -y
+
     ip=$(curl -s http://ipv4.icanhazip.com)
     zone_id=$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones?name=$2" -H "X-Auth-Email: $3" -H "X-Auth-Key: $4" -H "Content-Type: application/json" | grep -Po '(?<="id":")[^"]*' | head -1 )
     status=$(curl -X POST "https://api.cloudflare.com/client/v4/zones/$zone_id/dns_records/" -H "X-Auth-Email: $3" -H "X-Auth-Key: $4" -H "Content-Type: application/json" --data '{"type":"'"A"'","name":"'"$1"'","content":"'"$ip"'","proxiable":'"true"',"proxied":'"false"',"ttl":'"1"'}')
@@ -45,7 +40,7 @@ else
     iptables -t nat -A POSTROUTING -o $interface -j MASQUERADE
     apt install iptables-persistent -y
     echo "Success"
-    echo "Next, please use \"ocpasswd -g Global,Optimized -c /etc/ocserv/ocpasswd user_name\" to add users and set their passwords"
+    echo "Next, please use 11111111\"ocpasswd -g Global,Optimized -c /etc/ocserv/ocpasswd user_name\" to add users and set their passwords"
     exit 0
   else
     echo "This script should be run as root. Now exit."
