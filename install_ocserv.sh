@@ -28,7 +28,7 @@ else
       echo "Sub-domain registration failed. Please manually register with Cloudflare (Maybe already registered?)"
       read -p "Press [Enter] key when registration is complete or ctrl+c to terminate the script..."
     fi
-    sudo certbot certonly --webroot -d $1.$2
+    sudo certbot certonly --webroot -y
     mkdir /root/.secrets
     echo "dns_cloudflare_email = \"$3\"
     dns_cloudflare_api_key = \"$4\"" > /root/.secrets/cloudflare.ini
