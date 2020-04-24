@@ -9,7 +9,7 @@ You must have a domain managed by cloudflare. You also need to know your **Globa
 
 ```shell
 
-wget https://raw.githubusercontent.com/dreamsafari/ocserv-auto-config/master/install_ocserv.sh && chmod +x install_ocserv.sh
+wget https://raw.githubusercontent.com/initux/ocserv-auto-config/master/install_ocserv.sh && chmod +x install_ocserv.sh
 sudo ./install_ocserv.sh sub-domain_name domain_name cloudflare_email cloudflare_API_key
 
 ```
