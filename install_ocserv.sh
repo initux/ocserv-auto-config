@@ -28,13 +28,13 @@ else
       echo "Sub-domain registration failed. Please manually register with Cloudflare (Maybe already registered?)"
       read -p "Press [Enter] key when registration is complete or ctrl+c to terminate the script..."
     fi
-    #sudo certbot certonly --webroot
+    sudo certbot certonly #--webroot
     mkdir /root/.secrets
     echo "dns_cloudflare_email = \"$3\"
     dns_cloudflare_api_key = \"$4\"" > /root/.secrets/cloudflare.ini
     chmod 0700 /root/.secrets/
     chmod 0400 /root/.secrets/cloudflare.ini
-    certbot certonly --webroot --email $3 --no-eff-email --dns-cloudflare --dns-cloudflare-credentials /root/.secrets/cloudflare.ini -d $1.$2 --preferred-challenges dns-01 --agree-tos
+    certbot certonly --email $3 --no-eff-email --dns-cloudflare --dns-cloudflare-credentials /root/.secrets/cloudflare.ini -d $1.$2 --preferred-challenges dns-01 --agree-tos
     #sed -i "s/your_domain/$1.$2/g" /etc/ocserv/ocserv.conf
     systemctl restart ocserv
     interface=$(find /sys/class/net ! -type d | xargs --max-args=1 realpath  | awk -F\/ '/pci/{print $NF}')
