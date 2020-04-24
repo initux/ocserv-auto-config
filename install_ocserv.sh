@@ -19,15 +19,16 @@ else
     fi
 		apt update
 		apt dist-upgrade -y
-		apt install build-essential ocserv python3-certbot-dns-cloudflare unzip -y
-    wget -O ocserv.zip "https://github.com/dreamsafari/ocserv-auto-config/blob/master/ocserv.zip?raw=true"
-    rm -rf /etc/ocserv
-    unzip ocserv.zip -d /etc/ocserv
-    rm ocserv.zip
+ 		apt install build-essential ocserv python3-certbot-dns-cloudflare unzip -y
+# 		apt install build-essential ocserv python3-certbot-dns-cloudflare unzip -y
+#     wget -O ocserv.zip "https://github.com/dreamsafari/ocserv-auto-config/blob/master/ocserv.zip?raw=true"
+#     rm -rf /etc/ocserv
+#     unzip ocserv.zip -d /etc/ocserv
+#     rm ocserv.zip
     # cloudflare sub-domain registration
     ip=$(curl -s http://ipv4.icanhazip.com)
     zone_id=$(curl -s -X GET "https://api.cloudflare.com/client/v4/zones?name=$2" -H "X-Auth-Email: $3" -H "X-Auth-Key: $4" -H "Content-Type: application/json" | grep -Po '(?<="id":")[^"]*' | head -1 )
-    status=$(curl -X POST "https://api.cloudflare.com/client/v4/zones/$zone_id/dns_records/" -H "X-Auth-Email: $3" -H "X-Auth-Key: $4" -H "Content-Type: application/json" --data '{"type":"'"A"'","name":"'"$1"'","content":"'"$ip"'","proxied":'"false"',"ttl":'"1"'}')
+    status=$(curl -X POST "https://api.cloudflare.com/client/v4/zones/$zone_id/dns_records/" -H "X-Auth-Email: $3" -H "X-Auth-Key: $4" -H "Content-Type: application/json" --data '{"type":"'"A"'","name":"'"$1"'","content":"'"$ip"'","proxiable":'"true"',"proxied":'"false"',"ttl":'"1"'}')
     if [[ $status == *"\"success\":false"* ]]; then
       echo "Sub-domain registration failed. Please manually register with Cloudflare (Maybe already registered?)"
       read -p "Press [Enter] key when registration is complete or ctrl+c to terminate the script..."
@@ -38,7 +39,7 @@ else
     chmod 0700 /root/.secrets/
     chmod 0400 /root/.secrets/cloudflare.ini
     certbot certonly --email $3 --no-eff-email --dns-cloudflare --dns-cloudflare-credentials /root/.secrets/cloudflare.ini -d $1.$2 --preferred-challenges dns-01 --agree-tos
-    sed -i "s/your_domain/$1.$2/g" /etc/ocserv/ocserv.conf
+    #sed -i "s/your_domain/$1.$2/g" /etc/ocserv/ocserv.conf
     systemctl restart ocserv
     interface=$(find /sys/class/net ! -type d | xargs --max-args=1 realpath  | awk -F\/ '/pci/{print $NF}')
     iptables -t nat -A POSTROUTING -o $interface -j MASQUERADE
